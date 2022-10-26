@@ -24,10 +24,10 @@ const WeatherContainer = () => {
     getWeatherData();
   }, []);
 
-  //then pass the data to the component
+  //then pass the data to the component if the there's an ID on weatherData
   return (
     <div className='h-screen w-screen flex justify-center items-center'>
-      <WeatherData data={weatherData} />
+      {weatherData.id && <WeatherData data={weatherData} />}
     </div>
   );
 };
