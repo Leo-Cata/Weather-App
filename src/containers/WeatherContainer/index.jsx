@@ -9,19 +9,24 @@ const WeatherContainer = () => {
   //save weather data
   const [weatherData, setWeatherData] = useState({});
 
-  //fetch data and save it to state
+  //fetch data, save it to state. After 60 seconds refetch again
   useEffect(() => {
     const getWeatherData = async () => {
       try {
         const resp = await fetch(fetchURL);
         const data = await resp.json();
-
         setWeatherData(data);
+        let date = new Date();
+        console.log(date);
       } catch (error) {
         console.log(error);
       }
     };
     getWeatherData();
+    const interval = setInterval(() => {
+      getWeatherData();
+    }, 60000);
+    return () => clearInterval(interval);
   }, []);
 
   //then pass the data to the component if the there's an ID on weatherData
