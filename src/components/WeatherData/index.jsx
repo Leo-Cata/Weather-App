@@ -96,7 +96,7 @@ const WeatherData = ({ data }) => {
   }
 
   return (
-    <div className='bg-black h-[99%] w-[99%] rounded-2xl text-center'>
+    <div>
       <div className='text-white text-4xl m-2'>{placeName}</div>
       <div className='flex justify-center flex-col flex-wrap '>
         <div className='m-auto'>
