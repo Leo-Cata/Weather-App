@@ -22,24 +22,6 @@ const WeatherContainer = () => {
 
   //fetch data, save it to state. After 60 seconds refetch again
   useEffect(() => {
-    const getWeatherData = async () => {
-      try {
-        const resp = await fetch(fetchURL);
-        const data = await resp.json();
-        setWeatherData(data);
-        let date = new Date();
-        console.log(date);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getWeatherData();
-    const interval = setInterval(() => {
-      getWeatherData();
-    }, 60000);
-    return () => clearInterval(interval);
-  }, []);
-  useEffect(() => {
     //fetch data and save it to state
     if (location) {
       const getWeatherData = async () => {
@@ -47,7 +29,7 @@ const WeatherContainer = () => {
           const resp = await fetch(fetchURL);
           const data = await resp.json();
           //if there is .name in data fetched, set the data, else set location back to null and alert user
-          if (data.name) {
+          if (data.name || !null) {
             setWeatherData(data);
           } else {
             setLocation(null);
@@ -59,6 +41,11 @@ const WeatherContainer = () => {
       };
 
       getWeatherData();
+      const interval = setInterval(() => {
+        getWeatherData();
+        console.log('test');
+      }, 60000);
+      return () => clearInterval(interval);
     }
 
     //when location changes, save location in local storage
