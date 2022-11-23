@@ -29,23 +29,27 @@ const WeatherContainer = () => {
         //fetch location, if its not found show error and clean the local storage
         const resp = await fetch(fetchURL);
         const data = await resp.json();
-        console.log('location', location);
         //if not 404 and location is not null(stringedfied cause sometimes return null as string)
         if (data.cod === '404' && String(location) !== 'null') {
-          console.log('here');
           alert(data.message);
         } else {
           setWeatherData(data);
-          localStorage.setItem('storageLocation', location);
         }
       } catch (error) {
         console.log(error);
       }
     };
-    getWeatherData();
-    //when location changes, save location in local storage
-  }, [fetchURL, location]);
 
+    //when location changes, save location in local storage
+    localStorage.setItem('storageLocation', location);
+    getWeatherData();
+
+    //every 5 mins, refetch
+    const interval = setInterval(() => {
+      getWeatherData();
+    }, 300000);
+    return () => clearInterval(interval);
+  }, [fetchURL, location]);
   //then pass the data to the component if the there's an ID on weatherData | if there isnt a location, show input and button to look for
   return (
     <div className='h-screen w-screen flex justify-center items-center'>
