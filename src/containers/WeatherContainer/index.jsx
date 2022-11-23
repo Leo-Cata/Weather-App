@@ -23,33 +23,27 @@ const WeatherContainer = () => {
   //fetch data, save it to state. After 60 seconds refetch again
   useEffect(() => {
     //fetch data and save it to state
-    if (location) {
-      const getWeatherData = async () => {
-        try {
-          const resp = await fetch(fetchURL);
-          const data = await resp.json();
-          //if there is .name in data fetched, set the data, else set location back to null and alert user
-          if (data.name || !null) {
-            setWeatherData(data);
-          } else {
-            setLocation(null);
-            alert('Location Not Found, Please Try Again');
-          }
-        } catch (error) {
-          console.log(error);
+
+    const getWeatherData = async () => {
+      try {
+        //fetch location, if its not found show error and clean the local storage
+        const resp = await fetch(fetchURL);
+        const data = await resp.json();
+        console.log('location', location);
+        //if not 404 and location is not null(stringedfied cause sometimes return null as string)
+        if (data.cod === '404' && String(location) !== 'null') {
+          console.log('here');
+          alert(data.message);
+        } else {
+          setWeatherData(data);
+          localStorage.setItem('storageLocation', location);
         }
-      };
-
-      getWeatherData();
-      const interval = setInterval(() => {
-        getWeatherData();
-        console.log('test');
-      }, 60000);
-      return () => clearInterval(interval);
-    }
-
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getWeatherData();
     //when location changes, save location in local storage
-    localStorage.setItem('storageLocation', location);
   }, [fetchURL, location]);
 
   //then pass the data to the component if the there's an ID on weatherData | if there isnt a location, show input and button to look for
@@ -71,7 +65,9 @@ const WeatherContainer = () => {
                 }
               }}
             />
-            <button onClick={handleLocationSearch}>Buscar</button>
+            <button onClick={handleLocationSearch} className='text-white'>
+              Buscar
+            </button>
           </>
         )}
       </div>
